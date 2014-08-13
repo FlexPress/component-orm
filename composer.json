@@ -1,0 +1,9 @@
+{
+    "name": "flexpress/component-orm",
+    "description": "ORM system WordPress",
+    "autoload": {
+        "psr-4": {
+            "FlexPress\\Components\\ORM\\": "src/FlexPress/Components/ORM/"
+        }
+    }
+}
