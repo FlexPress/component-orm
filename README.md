@@ -1,10 +1,11 @@
 # FlexPress orm component
 
 ## Install with Pimple
-- This example creates a document model
+- This example creates a document model, notice that we pass in the global post object, the ORM system will then copy over all the properties from the post object, including the ID, which is very important.
+- - Please note that this example is done as a service and would return the same object for each call, you should use the factory method in pimple if you want to create a new object each time.
 ```
 $pimple["documentModel"] = function () {
-  return new DocumentModel();
+  return new DocumentModel($GLOBALS['post']);
 };
 
 ```
@@ -95,3 +96,24 @@ would return the first terms name but if you wanted to return all the terms as o
 ```
 $categories = $document->theCategory(true);
 ```
+
+## Saving data
+To save the changes you simply call ->persist() on the model ,e.g. following on from the example above:
+```
+$document = $pimple["documentModel"];
+$document->setLastUpdated("20140808");
+$document->persist();
+```
+
+## Public methods
+- getFeaturedImage($image_size, $attrs = array()) - Gets the featured image for the given imagesize and arrays
+- theFeaturedImage($image_size, $attrs = array()) - Outputs the featured image for the given imagesize and arrays
+- getOriginalPostObject() - Returns the original post object that was passed to the model
+- instanceByID($id) - Static method to get a instance of the model for a given post id
+- delete($force_delete = true) - Uses wp_delete_post to delete the model / post
+- persist() - saves the model
+
+# Protected methods
+- loadPropertyValue($propertyName, $type, $overrideKey = false) - Used to load the property value
+- getDocblockAttrs($attr) - Used to get the doc block attributes
+- getUnderscoredEquivalent($value) - Gets the underscore equivalent of the camelcase value
