@@ -223,7 +223,7 @@ abstract class AbstractORM
 
         $action = $matches[0][0];
 
-        $format = ($matches[0][1] == "formatted");
+        $format = ($matches[0][1] == "Formatted");
 
         $offset = ($format) ? 2 : 1;
         $propertyName = lcfirst(implode("", array_slice($matches[0], $offset)));
@@ -231,6 +231,19 @@ abstract class AbstractORM
         if ($action == "get" || $action == "the") {
 
             $class = new ReflectionClass($this);
+
+            // if the property given doesnt exist, try loading a underscore version of it.
+            if (!$class->hasProperty($propertyName)) {
+
+                $underscoredPropertyName = $this->getUnderscoredEquivalent($propertyName);
+
+                if ($property = $class->getProperty($underscoredPropertyName)) {
+
+                    $propertyName = $underscoredPropertyName;
+
+                }
+
+            }
 
             $property = $class->getProperty($propertyName);
             $property->setAccessible(true);
@@ -266,7 +279,7 @@ abstract class AbstractORM
             }
 
             // For post author, return the name
-            if ($propertyName == "post_author") {
+            if ($propertyName == "PostAuthor") {
                 $value = get_the_author_meta("display_name", $this->post_author);
             }
 
