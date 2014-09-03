@@ -288,6 +288,10 @@ abstract class AbstractORM
                 $value = date($args[0], strtotime($value));
             }
 
+            if($propertyName == 'post_content') {
+                $value = apply_filters('the_content', $value);
+            }
+
             if ($action == "get") {
                 return $value;
             }
